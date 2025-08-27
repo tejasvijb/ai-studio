@@ -25,6 +25,7 @@ export default function UploadImage({
 
 
   return (
+  return (
 
     <div
       className={`border-2 cursor-pointer border-dashed rounded-xl p-8 text-center transition-colors ${selectedImage
