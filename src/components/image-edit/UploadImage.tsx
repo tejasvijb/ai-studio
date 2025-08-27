@@ -24,7 +24,7 @@ export default function UploadImage({
 }) {
 
 
-  return (
+
   return (
 
     <div
