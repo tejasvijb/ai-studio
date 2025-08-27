@@ -55,6 +55,34 @@ npm run dev
 
 3. Navigate to the AI Image Editor to start editing images
 
+### Running Tests
+
+#### Unit Tests
+
+Run Jest unit tests with:
+
+```bash
+npm test
+```
+
+#### End-to-End Tests
+
+Run Cypress end-to-end tests:
+
+1. Start the development server in one terminal:
+
+```bash
+npm run dev
+```
+
+2. Open Cypress in another terminal:
+
+```bash
+npm run cypress:open
+```
+
+3. In the Cypress UI, click on "E2E Testing", choose a browser, and select the `image-edit-flow.cy.js` test to run.
+
 ## Usage
 
 ### AI Image Editor
