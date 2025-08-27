@@ -31,7 +31,7 @@ cd ai-studio
 npm install
 ```
 
-3. Create a `.env.local` file in the root directory:
+3. Create a `.env` file in the root directory:
 
 ```bash
 # OpenAI API Configuration
@@ -41,7 +41,7 @@ OPENAI_API_KEY=your_openai_api_key_here
 4. Get your OpenAI API key:
     - Visit [OpenAI Platform](https://platform.openai.com/api-keys)
     - Create a new API key
-    - Copy it to your `.env.local` file
+    - Copy it to your `.env` file
 
 ### Running the Application
 
