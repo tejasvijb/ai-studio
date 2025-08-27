@@ -6,6 +6,7 @@ import { ImageModal } from '@/components/ui/modal';
 import UploadImage from './UploadImage';
 import PromptAndStyle from './PromptAndStyle';
 import ResultImage from './ResultImage';
+import { validateAndResizeImage } from '@/lib/utils';
 
 
 const additionalPrompt = 'Make sure it looks realistic, matches the lighting and body shape, and blends seamlessly with the original photo.';
@@ -33,6 +34,7 @@ export default function ImageEditPage() {
     createdAt: number;
   }>>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Load history from localStorage on component mount
   useEffect(() => {
@@ -72,21 +74,32 @@ export default function ImageEditPage() {
     setResultImage(historyItem);
   };
 
-  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleImageSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type.startsWith('image/')) {
-      setSelectedImage(file);
-      setError(null);
-      setResultImage({
-        image: '',
-        style: '',
-        prompt: '',
-        createdAt: 0
-      });
+      try {
+        // Validate and resize the image
+        const processedFile = await validateAndResizeImage(file);
 
-      // Create preview URL
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
+        setSelectedImage(processedFile);
+        setError(null);
+        setResultImage({
+          image: '',
+          style: '',
+          prompt: '',
+          createdAt: 0
+        });
+
+        // Create preview URL
+        const url = URL.createObjectURL(processedFile);
+        setPreviewUrl(url);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred processing the image');
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      }
     }
   };
 
@@ -104,6 +117,10 @@ export default function ImageEditPage() {
     setIsLoading(true);
     setError(null);
 
+    // Create a new AbortController for this request
+    abortControllerRef.current = new AbortController();
+    const { signal } = abortControllerRef.current;
+
     try {
       const formData = new FormData();
       formData.append('image', selectedImage);
@@ -114,6 +131,7 @@ export default function ImageEditPage() {
       const response = await fetch('/api/image-edit', {
         method: 'POST',
         body: formData,
+        signal, // Pass the abort signal to the fetch call
       });
 
       const result = await response.json();
@@ -133,28 +151,41 @@ export default function ImageEditPage() {
         setResultImage(newResult);
         addToHistory(newResult);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+    } catch (err: any) {
+      // Don't show error if the request was aborted by user
+      if (err.name === 'AbortError') {
+        setError('Request cancelled by user');
+      } else {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      }
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   };
 
-  const handleDrop = (event: React.DragEvent) => {
+  const handleDrop = async (event: React.DragEvent) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
-      setSelectedImage(file);
-      setError(null);
-      setResultImage({
-        image: '',
-        style: '',
-        prompt: '',
-        createdAt: 0
-      });
+      try {
+        // Validate and resize the image
+        const processedFile = await validateAndResizeImage(file);
 
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
+        setSelectedImage(processedFile);
+        setError(null);
+        setResultImage({
+          image: '',
+          style: '',
+          prompt: '',
+          createdAt: 0
+        });
+
+        const url = URL.createObjectURL(processedFile);
+        setPreviewUrl(url);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred processing the image');
+      }
     }
   };
 
@@ -176,6 +207,15 @@ export default function ImageEditPage() {
     setSelectedStyle('editorial');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
+    }
+  };
+
+  const handleCancelRequest = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+      setError('Request cancelled by user');
+      setIsLoading(false);
     }
   };
 
@@ -242,23 +282,38 @@ export default function ImageEditPage() {
             />
 
             <div className="mt-6 space-y-4">
-              <Button
-                onClick={handleSubmit}
-                disabled={!selectedImage || isLoading}
-                className="w-full enhance-button"
-                size="lg"
-              >
-                {isLoading ? (
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Processing...</span>
-                  </div>
-                ) : (
-                  'Enhance Image with AI'
-                )}
-              </Button>
+              {!isLoading ? (
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!selectedImage}
+                  className="w-full"
+                  size="lg"
+                >
+                  Enhance Image with AI
+                </Button>
+              ) : (
+                <div className="flex gap-2">
+                  <Button
+                    disabled
+                    className="flex-1"
+                    size="lg"
+                  >
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Processing...</span>
+                    </div>
+                  </Button>
+                  <Button
+                    onClick={handleCancelRequest}
+                    variant="destructive"
+                    size="lg"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
 
-              {selectedImage && (
+              {selectedImage && !isLoading && (
                 <Button
                   onClick={resetForm}
                   variant="outline"
