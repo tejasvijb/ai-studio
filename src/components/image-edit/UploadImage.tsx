@@ -25,6 +25,7 @@ export default function UploadImage({
 
 
   return (
+  return (
 
     <div
       className={`border-2 cursor-pointer border-dashed rounded-xl p-8 text-center transition-colors ${selectedImage
@@ -51,9 +52,15 @@ export default function UploadImage({
               <ZoomIn className="w-12 h-12 text-white" />
             </div>
           </div>
-          <p className="text-sm text-gray-600">
-            {selectedImage?.name}
-          </p>
+          <div className="space-y-1">
+            <p className="text-sm text-gray-600">
+              {selectedImage?.name}
+            </p>
+            <p className="text-xs text-gray-400">
+              {selectedImage &&
+                `Size: ${(selectedImage.size / (1024 * 1024)).toFixed(2)} MB`}
+            </p>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
@@ -67,6 +74,9 @@ export default function UploadImage({
               Drop your image here
             </p>
             <p className="text-gray-500">or click to browse</p>
+            <p className="text-xs text-gray-400 mt-2">
+              Max size: 10MB. Large images will be resized to 1920px.
+            </p>
           </div>
         </div>
       )}
