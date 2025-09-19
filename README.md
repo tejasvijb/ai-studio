@@ -3,17 +3,17 @@
 
 <p align="center">
     <strong>App Preview</strong><br>
-    <img src="public/app-preview.png" alt="App Preview" width="400" />
+    <img src="public/app-preview.png" alt="App Preview" width="600" />
 </p>
 
 <p align="center">
     <strong>Cypress Test Example</strong><br>
-    <img src="public/cypress-test.png" alt="Cypress Test" width="400" />
+    <img src="public/cypress-test.png" alt="Cypress Test" width="600" />
 </p>
 
 <p align="center">
     <strong>Jest Test Example</strong><br>
-    <img src="public/jest-test.png" alt="Jest Test" width="400" />
+    <img src="public/jest-test.png" alt="Jest Test" width="600" />
 </p>
 
 <p align="center">
