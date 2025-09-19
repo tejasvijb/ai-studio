@@ -2,17 +2,17 @@
 
 
 <p align="center">
-    <strong>App Preview</strong><br>
+    <h2>App Preview</h2><br>
     <img src="public/app-preview.png" alt="App Preview" width="600" />
 </p>
 
 <p align="center">
-    <strong>Cypress Test Example</strong><br>
+    <h2>Cypress Test Example</h2><br>
     <img src="public/cypress-test.png" alt="Cypress Test" width="600" />
 </p>
 
 <p align="center">
-    <strong>Jest Test Example</strong><br>
+    <h2>Jest Test Example</h2><br>
     <img src="public/jest-test.png" alt="Jest Test" width="600" />
 </p>
 
@@ -30,7 +30,9 @@ A modern web application showcasing AI-powered tools, built with Next.js, OpenAI
 -   **AI Image Editor**: Upload images and let AI enhance them with beautiful styling
 -   Modern, responsive UI with drag-and-drop functionality
 -   Real-time image processing using OpenAI's image editing API
--   Beautiful gradient designs and smooth animations
+-   Exponential backoff - ( Retry if api fails with delay )
+-   Jest test 84% code coverage
+-   Cypress End to End tests 
 
 ## Getting Started
 
