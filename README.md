@@ -1,5 +1,28 @@
 # AI Studio
 
+
+<p align="center">
+    <strong>App Preview</strong><br>
+    <img src="public/app-preview.png" alt="App Preview" width="400" />
+</p>
+
+<p align="center">
+    <strong>Cypress Test Example</strong><br>
+    <img src="public/cypress-test.png" alt="Cypress Test" width="400" />
+</p>
+
+<p align="center">
+    <strong>Jest Test Example</strong><br>
+    <img src="public/jest-test.png" alt="Jest Test" width="400" />
+</p>
+
+<p align="center">
+    <a href="https://www.loom.com/share/9513d89fba944f098cfc881c08cdf569" target="_blank">▶️ Watch Demo on Loom</a>
+</p>
+
+
+# AI Studio
+
 A modern web application showcasing AI-powered tools, built with Next.js, OpenAI, and Tailwind CSS.
 
 ## Features
